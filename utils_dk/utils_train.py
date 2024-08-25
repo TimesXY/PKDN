@@ -35,8 +35,6 @@ def train(model, loader_train, loader_valid, epochs, optimizer):
     accuracy_list_train = []
     accuracy_list_valid = []
 
-
-
     # cos 学习率
     scheduler = torch.optim.lr_scheduler.CosineAnnealingWarmRestarts(optimizer, 10, T_mult=2)
 
@@ -117,9 +115,9 @@ def train(model, loader_train, loader_valid, epochs, optimizer):
         scheduler.step()
 
         '''模型测试 '''
-        model.eval()
         with torch.no_grad():
 
+            model.eval()
             for i, (valid_images, valid_labels) in enumerate(loader_valid):
                 # 添加到 CUDA 中
                 valid_images, valid_labels = valid_images.cuda(), valid_labels.cuda()
@@ -180,21 +178,21 @@ def train(model, loader_train, loader_valid, epochs, optimizer):
 
         # 计算召回率
         train_recall = metrics.recall_score(train_score_list, train_label_list,
-                                            labels=np.unique(train_label_list), average="micro")
+                                            labels=np.unique(train_label_list))
         valid_recall = metrics.recall_score(valid_score_list, valid_label_list,
-                                            labels=np.unique(valid_label_list), average="micro")
+                                            labels=np.unique(valid_label_list))
 
         # 计算 F1 值
         train_f1_score = metrics.f1_score(train_score_list, train_label_list,
-                                          labels=np.unique(train_label_list), average="micro")
+                                          labels=np.unique(train_label_list))
         valid_f1_score = metrics.f1_score(valid_score_list, valid_label_list,
-                                          labels=np.unique(valid_label_list), average="micro")
+                                          labels=np.unique(valid_label_list))
 
         # 计算精准率
         train_precision = metrics.precision_score(train_score_list, train_label_list,
-                                                  labels=np.unique(train_label_list), average="micro")
+                                                  labels=np.unique(train_label_list))
         valid_precision = metrics.precision_score(valid_score_list, valid_label_list,
-                                                  labels=np.unique(valid_label_list), average="micro")
+                                                  labels=np.unique(valid_label_list))
 
         # 输出结果
         train_avg_loss = train_avg_loss.detach().cpu().item()
@@ -206,7 +204,6 @@ def train(model, loader_train, loader_valid, epochs, optimizer):
         print('验证: Epoch %d, Accuracy %f, Valid Loss: %f' % (epoch, valid_accuracy_avg, valid_avg_loss))
 
         # 保存最佳验证准确率模型
-        torch.save(model.state_dict(), "save_weights/model_{}.pth".format(epoch))
         if valid_accuracy_avg >= best_model:
             torch.save(model.state_dict(), "save_weights/best_model.pth")
             best_model = valid_accuracy_avg

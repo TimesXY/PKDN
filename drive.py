@@ -52,16 +52,16 @@ if __name__ == '__main__':
     optimizer = optim.AdamW(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
 
     # 加载预训练模型
-    # model_weight_path = "save_weights/model_pre_train.pth"
-    # ckpt = torch.load(model_weight_path, map_location=device)
-    #
-    # module_lst = [i for i in model.state_dict()]
-    # weights = OrderedDict()
-    # for idx, (k, v) in enumerate(ckpt.items()):
-    #     if model.state_dict()[module_lst[idx]].numel() == v.numel():
-    #         weights[module_lst[idx]] = v
-    # model.load_state_dict(weights, strict=False)
-    # print('预训练权重加载完成')
+    model_weight_path = "save_weights/model_pre_train.pth"
+    ckpt = torch.load(model_weight_path, map_location=device)
+
+    module_lst = [i for i in model.state_dict()]
+    weights = OrderedDict()
+    for idx, (k, v) in enumerate(ckpt.items()):
+        if model.state_dict()[module_lst[idx]].numel() == v.numel():
+            weights[module_lst[idx]] = v
+    model.load_state_dict(weights, strict=False)
+    print('预训练权重加载完成')
 
     # 模型训练
     model, loss = train(model, data_train, data_valid, epochs=epochs, optimizer=optimizer)

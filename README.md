@@ -1,6 +1,6 @@
 ### PKDN
 This repo is the official implementation for:  
-An accurate prediction for respiratory diseases using deep learning on bronchoscopy diagnosis images.  
+PKDN: Prior Knowledge Distillation Network for bronchoscopy diagnosis.  
 (The details of PKDN can be found at the model directory in this repo or in the paper.)
 
 ***
